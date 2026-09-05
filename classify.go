@@ -77,10 +77,10 @@ func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	m.next.ServeHTTP(w, r)
 }
 
-func (m *Middleware) serveHTTP(w http.ResponseWriter, r *http.Request) (*http.Request, error) {
+func (m *Middleware) Classify(r *http.Request) (*RequestLikelihood, error) {
 	clientHints, err := secchua.ParseClient(r)
 	if err != nil {
-		return r, err
+		return nil, err
 	}
 
 	ua := useragent.New(r.UserAgent())
@@ -88,7 +88,7 @@ func (m *Middleware) serveHTTP(w http.ResponseWriter, r *http.Request) (*http.Re
 	// TODO(Xe): move this to a pool?
 	pci, err := m.pcf.Instantiate(r.Context())
 	if err != nil {
-		return r, err
+		return nil, err
 	}
 	defer pci.Close(r.Context())
 
@@ -156,14 +156,23 @@ func (m *Middleware) serveHTTP(w http.ResponseWriter, r *http.Request) (*http.Re
 		SecChUa: schua,
 	})
 	if err != nil {
-		return r, err
+		return nil, err
 	}
 
-	r = r.WithContext(Store(r.Context(), &RequestLikelihood{
+	return &RequestLikelihood{
 		IsSlow:  mobileGuess.IsSlow,
 		IsPhone: mobileGuess.IsPhone,
 		IsBot:   mobileGuess.IsBot,
-	}))
+	}, nil
+}
+
+func (m *Middleware) serveHTTP(w http.ResponseWriter, r *http.Request) (*http.Request, error) {
+	rlh, err := m.Classify(r)
+	if err != nil {
+		return r, err
+	}
+
+	r = r.WithContext(Store(r.Context(), rlh))
 
 	return r, nil
 }
