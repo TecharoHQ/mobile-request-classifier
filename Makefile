@@ -5,8 +5,8 @@ WASM_FEATURES := --enable-bulk-memory --enable-sign-ext --enable-nontrapping-flo
 gravity:
 	rm phone_classifier/phone_classifier.go
 	gravity -w classifier ./target/wasm32-unknown-unknown/release/mobile_request_classifier.wasm > phone_classifier/phone_classifier.go
-	go tool goimports phone_classifier/phone_classifier2.go
-	patch ./phone_classifier/phone_classifier2.go ./phone_classifier/hack.patch 
+	go tool goimports -w phone_classifier/phone_classifier.go
+	patch ./phone_classifier/phone_classifier.go ./phone_classifier/hack.patch 
 
 rust:
 	cargo build --target wasm32-unknown-unknown --release
