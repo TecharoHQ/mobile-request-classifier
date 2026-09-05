@@ -1,0 +1,13 @@
+[package]
+name = "mobile-request-classifier"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+description = "Classifies the likelihood of a request being from a mobile phone"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wit-bindgen = "=0.57.1"
+wit-component = "=0.247.0"

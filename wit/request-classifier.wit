@@ -1,0 +1,16 @@
+package techaro:http;
+
+world phone-classifier {
+  use http.{http-request};
+
+  record mobile-likelihood {
+    // give the client grace for being 32 bit
+    is-slow: bool,
+    // give the client grace for being a phone
+    is-phone: bool,
+    // give the client non-grace for being a bot
+    is-bot: bool,
+  }
+
+  export is-mobile: func(req: http-request) -> result<mobile-likelihood, string>;
+}

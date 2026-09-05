@@ -1,0 +1,49 @@
+package techaro:http;
+
+interface http {
+  record http-version {
+    major: u8,
+    minor: u8,
+  }
+
+  record http-request {
+    method: string,
+    path: string,
+    query: string,
+    proto: http-version,
+    user-agent: user-agent,
+    sec-ch-ua: option<sec-ch-ua>,
+  }
+
+  record os-info {
+    full-name: string,
+    name: string,
+    version: string,
+  }
+
+  record version {
+    name: string,
+    version: string,
+  }
+
+  record user-agent {
+    bot: bool,
+    browser: version,
+    engine: version,
+    localization: string,
+    mobile: bool,
+    model: string,
+    os: string,
+    os-info: os-info,
+    platform: string,
+    orig: string,
+  }
+
+  record sec-ch-ua {
+    versions: list<version>,
+    mobile: option<bool>,
+    platform: string,
+    arch: string,
+    bitness: string,
+  }
+}

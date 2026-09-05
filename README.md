@@ -1,0 +1,3 @@
+# mobile-request-classifier
+
+One of the main problems with Anubis is that it does not give grace to mobile phones. For a while I've just tolerated this as a "yeah I'll go fix that eventually" kind of issue, but it's become an increasingly dire thorn in everyone's side. This is the first step in relenting and giving grace to mobile phones: trying to classify mobile phone requests using hotpluggable logic defined in WebAssembly with the [WebAssembly Component Model](https://component-model.bytecodealliance.org/introduction.html) and [Arcjet's gravity](https://github.com/arcjet/gravity) to bridge the gap between Go and Rust.
