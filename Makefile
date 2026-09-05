@@ -1,4 +1,4 @@
-.PHONY: rust
+.PHONY: rust gravity upload
 
 WASM_FEATURES := --enable-bulk-memory --enable-sign-ext --enable-nontrapping-float-to-int --enable-mutable-globals
 
@@ -12,3 +12,6 @@ rust:
 	cargo build --target wasm32-unknown-unknown --release
 	wasm-opt -O3 $(WASM_FEATURES) --strip-debug --strip-producers ./target/wasm32-unknown-unknown/release/mobile_request_classifier.wasm -o ./var/mobile_request_classifier.wasm
 	wasm-strip ./var/mobile_request_classifier.wasm
+
+upload: rust
+	AWS_PROFILE=tigris aws s3 cp ./var/mobile_request_classifier.wasm s3://pkgs.techaro.lol/wasm/mobile_request_classifier.wasm
