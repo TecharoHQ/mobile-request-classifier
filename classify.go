@@ -23,10 +23,12 @@ type key int
 
 const requestLikelihoodKey key = iota
 
+// Store client classification results into a context.Context.
 func Store(ctx context.Context, likelihood *RequestLikelihood) context.Context {
 	return context.WithValue(ctx, requestLikelihoodKey, likelihood)
 }
 
+// Get client classification results from a context.Context, nil if not discovered.
 func Get(ctx context.Context) *RequestLikelihood {
 	if v, ok := ctx.Value(requestLikelihoodKey).(*RequestLikelihood); ok {
 		return v
@@ -35,12 +37,15 @@ func Get(ctx context.Context) *RequestLikelihood {
 	return nil
 }
 
+// Middleware wraps an HTTP handler, annotating client requests with the mobile phone
+// request likelihood for downstream services.
 type Middleware struct {
 	pcf  *phone_classifier.ClassifierFactory
 	next http.Handler
 	lg   *slog.Logger
 }
 
+// New constructs a new classification middleware instance.
 func New(ctx context.Context, lg *slog.Logger, next http.Handler, wasmBytes []byte) (*Middleware, error) {
 	pcf, err := phone_classifier.NewPhoneClassifierFactory(ctx, wasmBytes)
 	if err != nil {
@@ -54,6 +59,10 @@ func New(ctx context.Context, lg *slog.Logger, next http.Handler, wasmBytes []by
 	}, nil
 }
 
+// ServeHTTP wraps the downstream handler with client prediction results.
+//
+// If any step of this fails, the entire attempt fails, an error is logged, and
+// the next part of the middleware chain is called as normal.
 func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if m.pcf == nil {
 		m.next.ServeHTTP(w, r)
