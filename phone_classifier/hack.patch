@@ -1,0 +1,16 @@
+15,17d14
+< //go:embed classifier.wasm
+< var wasmFileClassifier []byte
+< 
+77c74
+< func NewClassifierFactory(
+---
+> func NewPhoneClassifierFactory(
+79c76
+< 	http IClassifierHttp,
+---
+> 	wasmFilePhoneClassifier []byte,
+91c88
+< 	module, err := wazeroRuntime.CompileModule(ctx, wasmFileClassifier)
+---
+> 	module, err := wazeroRuntime.CompileModule(ctx, wasmFilePhoneClassifier)

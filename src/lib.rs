@@ -1,5 +1,5 @@
 wit_bindgen::generate!({
-    world: "phone-classifier",
+    world: "classifier",
 });
 
 pub struct PhoneClassifierWorld;

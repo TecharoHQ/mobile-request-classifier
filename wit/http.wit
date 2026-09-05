@@ -2,8 +2,8 @@ package techaro:http;
 
 interface http {
   record http-version {
-    major: u8,
-    minor: u8,
+    major: u32,
+    minor: u32,
   }
 
   record http-request {

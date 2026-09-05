@@ -1,6 +1,6 @@
 package techaro:http;
 
-world phone-classifier {
+world classifier {
   use http.{http-request};
 
   record mobile-likelihood {
